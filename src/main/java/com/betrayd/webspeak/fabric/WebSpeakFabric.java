@@ -1,22 +1,49 @@
 package com.betrayd.webspeak.fabric;
 
-import net.fabricmc.api.ModInitializer;
+import java.util.concurrent.CompletableFuture;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class WebSpeakFabric implements ModInitializer {
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
-    public static final Logger LOGGER = LoggerFactory.getLogger("webspeak-fabric");
+import net.betrayd.webspeak.WebSpeakServer;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Util;
 
-	@Override
-	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
+public class WebSpeakFabric {
+    public static WebSpeakFabric get(MinecraftServer server) {
+        return ((WebSpeakProvider) server).getWebSpeak();
+    }
 
-		LOGGER.info("Hello Fabric world!");
-	}
+    private final MinecraftServer minecraftServer;
+    private final WebSpeakServer webSpeakServer = new WebSpeakServer();
+
+    public WebSpeakFabric(MinecraftServer server) {
+        this.minecraftServer = server;
+    }
+
+    public MinecraftServer getMinecraftServer() {
+        return minecraftServer;
+    }
+
+    public WebSpeakServer getWebSpeakServer() {
+        return webSpeakServer;
+    }
+
+    public void start() {
+        webSpeakServer.start(8080);
+    }
+
+    public void tick() {
+        if (webSpeakServer.getApp() != null) {
+            webSpeakServer.tick();
+        }
+    }
+
+    public CompletableFuture<Void> stop() {
+        return CompletableFuture.runAsync(() -> {
+            if (webSpeakServer != null && webSpeakServer.getApp() != null) {
+                LoggerFactory.getLogger(getClass()).info("Shutting down WebSpeak");
+                webSpeakServer.stop();
+            }
+        }, Util.getMainWorkerExecutor());
+    }
 }
