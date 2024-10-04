@@ -14,7 +14,7 @@ public class WebSpeakFabric {
     }
 
     private final MinecraftServer minecraftServer;
-    private final WebSpeakServer webSpeakServer = new WebSpeakServer();
+    private WebSpeakServer webSpeakServer;
 
     public WebSpeakFabric(MinecraftServer server) {
         this.minecraftServer = server;
@@ -28,22 +28,45 @@ public class WebSpeakFabric {
         return webSpeakServer;
     }
 
+    public boolean isRunning() {
+        return webSpeakServer != null;
+    }
+
     public void start() {
-        webSpeakServer.start(8080);
+        if (webSpeakServer != null) {
+            throw new IllegalStateException("Server is already running.");
+        }
+        WebSpeakConfig config = WebSpeakMod.getConfig();
+
+        webSpeakServer = new WebSpeakServer();
+        webSpeakServer.getPannerOptions().maxDistance = config.getMaxRange();
+
+        webSpeakServer.start(config.getPort());
     }
 
     public void tick() {
-        if (webSpeakServer.getApp() != null) {
+        if (webSpeakServer != null && webSpeakServer.getApp() != null) {
             webSpeakServer.tick();
         }
     }
 
+    private CompletableFuture<Void> stopFuture;
+
     public CompletableFuture<Void> stop() {
-        return CompletableFuture.runAsync(() -> {
+        if (stopFuture != null) {
+            return stopFuture;
+        }
+
+        stopFuture = CompletableFuture.runAsync(() -> {
             if (webSpeakServer != null && webSpeakServer.getApp() != null) {
                 LoggerFactory.getLogger(getClass()).info("Shutting down WebSpeak");
                 webSpeakServer.stop();
             }
+
+            webSpeakServer = null;
+            stopFuture = null;
         }, Util.getMainWorkerExecutor());
+
+        return stopFuture;
     }
 }
