@@ -20,21 +20,13 @@ import net.minecraft.util.profiler.Profiler;
 public class MinecraftServerMixin implements WebSpeakProvider {
 
     @Unique
-    private WebSpeakFabric webSpeak;
+    private final WebSpeakFabric webSpeak = new WebSpeakFabric((MinecraftServer) (Object) this);
 
     @Shadow
     private Profiler profiler;
 
     @Override
     public WebSpeakFabric getWebSpeak() {
-        if (webSpeak == null) {
-            webSpeak = new WebSpeakFabric((MinecraftServer) (Object) this);
-        }
-        return webSpeak;
-    }
-
-    @Override
-    public WebSpeakFabric getWebSpeakIfPresent() {
         return webSpeak;
     }
     

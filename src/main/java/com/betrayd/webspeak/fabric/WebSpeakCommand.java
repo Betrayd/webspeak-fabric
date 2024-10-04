@@ -117,7 +117,7 @@ public class WebSpeakCommand {
             if (webPlayer != null) {
                 wasAlreadyConnected = true;
             } else {
-                webPlayer = new MCWebSpeakPlayer(server, player, UUID.randomUUID().toString());
+                webPlayer = new MCWebSpeakPlayer(server, player.networkHandler, UUID.randomUUID().toString());
                 server.addPlayer(webPlayer);
                 wasAlreadyConnected = false;
             }

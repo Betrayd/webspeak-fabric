@@ -1,7 +1,9 @@
 package com.betrayd.webspeak.fabric;
 
+import net.betrayd.webspeak.WebSpeakServer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Util;
 
@@ -27,6 +29,10 @@ public class WebSpeakMod implements ModInitializer {
     public void onInitialize() {
         loadConfig();
         CommandRegistrationCallback.EVENT.register(WebSpeakCommand::register);
+        ServerPlayConnectionEvents.DISCONNECT.register((netHandler, server) -> {
+            WebSpeakServer webSpeak = WebSpeakFabric.get(server).getWebSpeakServer();
+            webSpeak.removePlayer(netHandler.player.getUuidAsString());
+        });
     }
 
     private static void loadConfig() {
