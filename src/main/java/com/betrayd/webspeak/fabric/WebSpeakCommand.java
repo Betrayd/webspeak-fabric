@@ -1,6 +1,7 @@
 package com.betrayd.webspeak.fabric;
 
-import com.betrayd.webspeak.fabric.util.WebSpeakUtils;
+import static net.minecraft.server.command.CommandManager.*;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -11,17 +12,12 @@ import net.betrayd.webspeak.WebSpeakServer;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.ClickEvent;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.server.command.ServerCommandSource;
-
-import static net.minecraft.server.command.CommandManager.*;
-
-import java.util.UUID;
 
 public class WebSpeakCommand {
 
@@ -108,38 +104,21 @@ public class WebSpeakCommand {
         if (!ws.isRunning()) {
             throw NOT_RUNNING.create();
         }
-        WebSpeakPlayer webPlayer;
-        boolean wasAlreadyConnected;
 
         WebSpeakServer server = ws.getWebSpeakServer();
-        synchronized(server) {
-            webPlayer = server.getPlayer(player.getUuidAsString());
-            if (webPlayer != null) {
-                wasAlreadyConnected = true;
-            } else {
-                webPlayer = new MCWebSpeakPlayer(server, player.networkHandler, UUID.randomUUID().toString());
-                server.addPlayer(webPlayer);
-                wasAlreadyConnected = false;
-            }
-        }
 
-        String url = WebSpeakUtils.getPlayerConnectionAddress(webPlayer.getSessionId());
+        WebSpeakPlayer webPlayer = server.getOrCreatePlayer(player.getUuidAsString(),
+                MCWebSpeakPlayer.factory(player.networkHandler));
+
+        WebSpeakConfig config = WebSpeakMod.getConfig();
+        String url = webPlayer.getConnectionURL(config.getFrontendURL(), config.getBackendURL());
 
         context.getSource().sendFeedback(() -> {
-            MutableText text;
-
-            if (wasAlreadyConnected) {
-                text = Text.literal("Player is already connected to Web Speak.");
-            } else {
-                text = Text.literal("Connected to Web Speak.");
-            }
-
-            text.append(" Click ").append(Text.literal("here").setStyle(
+            return Text.literal("Connected to Web Speak.").append(" Click ").append(Text.literal("here").setStyle(
                     Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url))
                             .withColor(Formatting.GREEN)))
                     .append(" to join.");
 
-            return text;
         }, false);
 
         return 1;
@@ -159,7 +138,7 @@ public class WebSpeakCommand {
             throw NOT_RUNNING.create();
         }
 
-        if (!ws.getWebSpeakServer().removePlayer(player.getUuidAsString())) {
+        if (ws.getWebSpeakServer().removePlayer(player.getUuidAsString()) == null) {
             throw NOT_CONNECTED.create();
         };
 

@@ -2,12 +2,17 @@ package com.betrayd.webspeak.fabric;
 
 import net.betrayd.webspeak.WebSpeakPlayer;
 import net.betrayd.webspeak.WebSpeakServer;
+import net.betrayd.webspeak.WebSpeakServer.WebSpeakPlayerFactory;
 import net.betrayd.webspeak.util.WebSpeakVector;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
 public class MCWebSpeakPlayer extends WebSpeakPlayer {
+
+    public static final WebSpeakPlayerFactory<MCWebSpeakPlayer> factory(ServerPlayNetworkHandler netHandler) {
+        return (server, playerID, sessionID) -> new MCWebSpeakPlayer(server, netHandler, sessionID);
+    }
 
     // The network handler is the closest thing we have to a persistent "player controller" that will follow the player between respawns.
     private final ServerPlayNetworkHandler netHandler;
