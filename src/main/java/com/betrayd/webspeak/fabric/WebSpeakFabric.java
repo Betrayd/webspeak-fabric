@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import net.betrayd.webspeak.WebSpeakServer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 
 public class WebSpeakFabric {
@@ -40,6 +41,18 @@ public class WebSpeakFabric {
 
         webSpeakServer = new WebSpeakServer();
         webSpeakServer.getPannerOptions().maxDistance = config.getMaxRange();
+
+        webSpeakServer.onSessionConnected(player -> {
+            if (player instanceof MCWebSpeakPlayer mcPlayer) {
+                mcPlayer.getMcPlayer().sendMessage(Text.literal("WebSpeak client connected."));
+            }
+        });
+
+        webSpeakServer.onSessionDisconnected(player -> {
+            if (player instanceof MCWebSpeakPlayer mcPlayer) {
+                mcPlayer.getMcPlayer().sendMessage(Text.literal("WebSpeak client disconnected."));
+            }
+        });
 
         webSpeakServer.start(config.getPort());
     }

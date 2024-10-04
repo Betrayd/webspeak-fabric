@@ -48,6 +48,16 @@ public class WebSpeakConfig {
         this.backendURL = backendURL;
     }
 
+    private boolean autoStart;
+
+    public boolean autoStart() {
+        return autoStart;
+    }
+
+    public void setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
+    }
+
     public String toJson() {
         return GSON.toJson(this);
     }
