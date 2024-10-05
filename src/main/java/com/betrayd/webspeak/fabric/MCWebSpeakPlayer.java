@@ -45,6 +45,12 @@ public class MCWebSpeakPlayer extends WebSpeakPlayer {
     }
 
     @Override
+    public WebSpeakVector getUp() {
+        var vec = Vec3d.fromPolar(netHandler.player.getPitch() - 90, netHandler.player.getYaw());
+        return new WebSpeakVector(vec.x, vec.y, vec.z);
+    }
+
+    @Override
     public boolean isInScope(WebSpeakPlayer other) {
         if (other instanceof MCWebSpeakPlayer otherMC) {
             return netHandler.player.getEyePos().isInRange(otherMC.netHandler.player.getEyePos(), 24)
