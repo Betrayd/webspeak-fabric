@@ -22,7 +22,27 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	implementation 'com.github.Betrayd:web-speak:f0576e2a18'
+	implementation(include('com.github.Betrayd:web-speak:f0576e2a18'))
+
+	// Include webspeak transitive dependencies
+	include("io.javalin:javalin:6.3.0")
+	include("org.eclipse.jetty:jetty-server:11.0.23")
+	include("org.eclipse.jetty:jetty-http:11.0.23")
+	include("org.eclipse.jetty:jetty-io:11.0.23")
+	include("org.eclipse.jetty:jetty-util:11.0.23")
+	include("org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api:5.0.2")
+	include("org.eclipse.jetty.websocket:websocket-jetty-server:11.0.23")
+	include("org.eclipse.jetty:jetty-servlet:11.0.23")
+	include("org.eclipse.jetty:jetty-security:11.0.23")
+	include("org.eclipse.jetty:jetty-webapp:11.0.23")
+	include("org.eclipse.jetty:jetty-xml:11.0.23")
+	include("org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api:5.0.2")
+	include("org.eclipse.jetty.websocket:websocket-jetty-api:11.0.23")
+	include("org.eclipse.jetty.websocket:websocket-jetty-common:11.0.23")
+	include("org.eclipse.jetty.websocket:websocket-core-common:11.0.23")
+	include("org.eclipse.jetty.websocket:websocket-jetty-api:11.0.23")
+	include("org.eclipse.jetty.websocket:websocket-servlet:11.0.23")
+	include("org.eclipse.jetty.websocket:websocket-core-server:11.0.23")
 	
 }
 
