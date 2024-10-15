@@ -16,6 +16,8 @@ import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.betrayd.webspeak.fabric.events.SetGameModeEvent;
+
 public class WebSpeakMod implements ModInitializer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger("webspeak-fabric");
@@ -39,6 +41,11 @@ public class WebSpeakMod implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             if (config.autoStart())
                 WebSpeakFabric.get(server).start();
+        });
+
+        SetGameModeEvent.EVENT.register((player, newGamemode, oldGamemode) -> {
+            WebSpeakFabric ws = WebSpeakFabric.get(player.getServer());
+            ws.onGamemodeChange(player, newGamemode);
         });
     }
 

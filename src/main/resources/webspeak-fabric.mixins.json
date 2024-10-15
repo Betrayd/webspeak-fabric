@@ -3,7 +3,8 @@
 	"package": "com.betrayd.webspeak.fabric.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"MinecraftServerMixin"
+		"MinecraftServerMixin",
+		"ServerPlayerInteractionManagerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
