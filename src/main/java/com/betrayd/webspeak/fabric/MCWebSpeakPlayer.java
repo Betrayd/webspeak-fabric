@@ -37,11 +37,7 @@ public class MCWebSpeakPlayer extends WebSpeakPlayer {
     public WebSpeakVector getForward() {
         var vec = Vec3d.fromPolar(netHandler.player.getPitch(), netHandler.player.getYaw());
         return new WebSpeakVector(vec.x, vec.y, vec.z);
-        // forwardVector.set(0, 1, 0);
-        // forwardVector.rotateX(mcPlayer.getPitch() * MathHelper.RADIANS_PER_DEGREE);
-        // forwardVector.rotateZ(mcPlayer.getYaw() * MathHelper.RADIANS_PER_DEGREE);
-        // // LoggerFactory.getLogger(getClass()).info("Vec: {}", forwardVector);
-        // return new WebSpeakVector(forwardVector.x, forwardVector.y, forwardVector.z);
+
     }
 
     @Override
@@ -52,12 +48,15 @@ public class MCWebSpeakPlayer extends WebSpeakPlayer {
 
     @Override
     public boolean isInScope(WebSpeakPlayer other) {
-        if (other instanceof MCWebSpeakPlayer otherMC) {
-            return netHandler.player.getEyePos().isInRange(otherMC.netHandler.player.getEyePos(), 24)
-                    && netHandler.player.getWorld().equals(otherMC.netHandler.player.getWorld());
-        } else {
+        if (!this.getAudioModifier(other).isSpatialized() || !other.getAudioModifier(this).isSpatialized()) {
+            return true;
+        }
+        if (other instanceof MCWebSpeakPlayer otherMC && getMcPlayer().getWorld() != otherMC.getMcPlayer().getWorld()) {
             return false;
         }
+
+        float range = getServer().getPannerOptions().maxDistance;
+        return this.getLocation().squaredDistanceTo(other.getLocation()) <= range * range;
     }
 
 }

@@ -109,6 +109,7 @@ public class WebSpeakCommand {
 
         WebSpeakPlayer webPlayer = server.getOrCreatePlayer(player.getUuidAsString(),
                 MCWebSpeakPlayer.factory(player.networkHandler));
+        webPlayer.setChannel(server.getDefaultChannel());
 
         WebSpeakConfig config = WebSpeakMod.getConfig();
         String url = webPlayer.getConnectionURL(config.getFrontendURL(), config.getBackendURL());
