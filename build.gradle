@@ -22,7 +22,7 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	implementation(include('com.github.Betrayd:web-speak:f0576e2a18'))
+	implementation(include('com.github.Betrayd:web-speak:b8162f1b23'))
 
 	// Include webspeak transitive dependencies
 	include("io.javalin:javalin:6.3.0")

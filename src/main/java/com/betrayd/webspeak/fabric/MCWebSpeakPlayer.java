@@ -20,6 +20,7 @@ public class MCWebSpeakPlayer extends WebSpeakPlayer {
     public MCWebSpeakPlayer(WebSpeakServer server, ServerPlayNetworkHandler netHandler, String sessionId) {
         super(server, netHandler.player.getUuidAsString(), sessionId);
         this.netHandler = netHandler;
+        setPlayerListEntry(getPlayerListEntry().withName(netHandler.player.getName().getString()));
     }
 
     public ServerPlayerEntity getMcPlayer() {
@@ -55,7 +56,8 @@ public class MCWebSpeakPlayer extends WebSpeakPlayer {
             return false;
         }
 
-        float range = getServer().getPannerOptions().maxDistance;
+        float rangeOverride = WebSpeakMod.getConfig().getMaxRange();
+        float range = rangeOverride < 0 ? rangeOverride : getServer().getMaxAudioRange();
         return this.getLocation().squaredDistanceTo(other.getLocation()) <= range * range;
     }
 

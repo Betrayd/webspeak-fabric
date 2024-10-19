@@ -8,16 +8,6 @@ import com.google.gson.GsonBuilder;
 public class WebSpeakConfig {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    private float maxRange = 24;
-
-    public float getMaxRange() {
-        return maxRange;
-    }
-
-    public void setMaxRange(float maxRange) {
-        this.maxRange = maxRange;
-    }
-
     private int port = 8080;
 
     public int getPort() {
@@ -56,6 +46,55 @@ public class WebSpeakConfig {
 
     public void setAutoStart(boolean autoStart) {
         this.autoStart = autoStart;
+    }
+    
+    private float maxRange = -1;
+
+    public float getMaxRange() {
+        return maxRange;
+    }
+
+    public void setMaxRange(float maxRange) {
+        this.maxRange = maxRange;
+    }
+
+    private float maxDistance = 26;
+
+    public float getMaxDistance() {
+        return maxDistance;
+    }
+
+    public void setMaxDistance(float maxDistance) {
+        if (maxDistance < 0) {
+            throw new IllegalArgumentException("Max distance may not be negative.");
+        }
+        this.maxDistance = maxDistance;
+    }
+
+    private float refDistance = 1;
+
+    public float getRefDistance() {
+        return refDistance;
+    }
+
+    public void setRefDistance(float refDistance) {
+        if (refDistance < 0) {
+            throw new IllegalArgumentException("Ref distance may not be negative.");
+        }
+        this.refDistance = refDistance;
+    }
+
+    private float rolloffFactor = 1;
+
+    public float getRolloffFactor() {
+        return rolloffFactor;
+    }
+
+    public void setRolloffFactor(float rolloffFactor) {
+        if (rolloffFactor < 0) {
+            throw new IllegalArgumentException("Rolloff factor may not be negative.");
+        }
+        this.rolloffFactor = rolloffFactor;
     }
 
     public String toJson() {

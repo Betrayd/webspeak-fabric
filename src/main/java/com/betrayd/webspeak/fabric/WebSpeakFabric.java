@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import net.betrayd.webspeak.WebSpeakGroup;
 import net.betrayd.webspeak.WebSpeakServer;
 import net.betrayd.webspeak.util.AudioModifier;
+import net.betrayd.webspeak.util.PannerOptions;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -62,10 +63,10 @@ public class WebSpeakFabric {
         if (webSpeakServer != null) {
             throw new IllegalStateException("Server is already running.");
         }
-        WebSpeakConfig config = WebSpeakMod.getConfig();
-
+        
         webSpeakServer = new WebSpeakServer();
-        webSpeakServer.getPannerOptions().maxDistance = config.getMaxRange();
+        // webSpeakServer.getPannerOptions().maxDistance = config.getMaxRange();
+        updatePannerOptions();
 
         webSpeakServer.onSessionConnected(player -> {
             if (player instanceof MCWebSpeakPlayer mcPlayer) {
@@ -79,7 +80,7 @@ public class WebSpeakFabric {
             }
         });
 
-        webSpeakServer.start(config.getPort());
+        webSpeakServer.start(WebSpeakMod.getConfig().getPort());
 
         survivalGroup = new WebSpeakGroup("survival");
         spectatorGroup = new WebSpeakGroup("spectator");
@@ -88,6 +89,21 @@ public class WebSpeakFabric {
         spectatorGroup.setAudioModifier(spectatorGroup, new AudioModifier(null, false));
         
     }
+
+    /**
+     * Update the server's panner options from the mod config.
+     */
+    public void updatePannerOptions() {
+        WebSpeakConfig config = WebSpeakMod.getConfig();
+        PannerOptions panner = webSpeakServer.getPannerOptions();
+        if (webSpeakServer != null) {
+            panner.maxDistance = config.getMaxDistance();
+            panner.refDistance = config.getRefDistance();
+            panner.rolloffFactor = config.getRolloffFactor();
+            webSpeakServer.updatePannerOptions();
+        }
+    }
+    
 
     public void onGamemodeChange(ServerPlayerEntity player, GameMode newGamemode) {
         MCWebSpeakPlayer webPlayer = getPlayer(player.getUuid());

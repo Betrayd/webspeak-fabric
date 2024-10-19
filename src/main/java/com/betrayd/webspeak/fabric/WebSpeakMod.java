@@ -70,6 +70,5 @@ public class WebSpeakMod implements ModInitializer {
                 LOGGER.error("Error saving config file.", e);
             }
         });
-
     }
 }
