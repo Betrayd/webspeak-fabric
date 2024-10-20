@@ -1,7 +1,11 @@
-package com.betrayd.webspeak.fabric;
+package com.betrayd.webspeak.fabric.commands;
 
 import static net.minecraft.server.command.CommandManager.*;
 
+import com.betrayd.webspeak.fabric.MCWebSpeakPlayer;
+import com.betrayd.webspeak.fabric.WebSpeakConfig;
+import com.betrayd.webspeak.fabric.WebSpeakFabric;
+import com.betrayd.webspeak.fabric.WebSpeakMod;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -53,6 +57,7 @@ public class WebSpeakCommand {
                     .requires(s -> s.hasPermissionLevel(2)).executes(WebSpeakCommand::getOtherStatus)
             )
         ));
+        
     }
 
     private static int startServer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {

@@ -1,11 +1,20 @@
 package com.betrayd.webspeak.fabric;
 
+import java.io.BufferedWriter;
 import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import net.betrayd.webspeak.util.PannerOptions.DistanceModelType;
+import net.fabricmc.loader.api.FabricLoader;
+
 public class WebSpeakConfig {
+    public static final Path CONFIG_FILE = FabricLoader.getInstance().getConfigDir().resolve("webspeak.json");
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private int port = 8080;
@@ -38,7 +47,7 @@ public class WebSpeakConfig {
         this.backendURL = backendURL;
     }
 
-    private boolean autoStart;
+    private boolean autoStart = true;
 
     public boolean autoStart() {
         return autoStart;
@@ -58,6 +67,16 @@ public class WebSpeakConfig {
         this.maxRange = maxRange;
     }
 
+    private DistanceModelType distanceModel = DistanceModelType.LINEAR;
+
+    public DistanceModelType getDistanceModel() {
+        return distanceModel;
+    }
+
+    public void setDistanceModel(DistanceModelType distanceModel) {
+        this.distanceModel = distanceModel;
+    }
+
     private float maxDistance = 26;
 
     public float getMaxDistance() {
@@ -71,7 +90,7 @@ public class WebSpeakConfig {
         this.maxDistance = maxDistance;
     }
 
-    private float refDistance = 1;
+    private float refDistance = 4;
 
     public float getRefDistance() {
         return refDistance;
@@ -107,5 +126,20 @@ public class WebSpeakConfig {
 
     public static WebSpeakConfig fromJson(Reader reader) {
         return GSON.fromJson(reader, WebSpeakConfig.class);
+    }
+    
+    /**
+     * Asynchronously save the WebSpeak config to file.
+     * @return A future that completes when the config is saved.
+     */
+    public CompletableFuture<Void> saveAsync() {
+        return CompletableFuture.runAsync(() -> {
+            try(BufferedWriter writer = Files.newBufferedWriter(CONFIG_FILE)) {
+                writer.write(toJson());
+            } catch (Exception e) {
+                WebSpeakMod.LOGGER.error("Error saving WebSpeak config.", e);
+                throw new CompletionException(e);
+            }
+        });
     }
 }

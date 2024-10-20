@@ -57,7 +57,7 @@ public class MCWebSpeakPlayer extends WebSpeakPlayer {
         }
 
         float rangeOverride = WebSpeakMod.getConfig().getMaxRange();
-        float range = rangeOverride < 0 ? rangeOverride : getServer().getMaxAudioRange();
+        float range = rangeOverride > 0 ? rangeOverride : getServer().getMaxAudioRange();
         return this.getLocation().squaredDistanceTo(other.getLocation()) <= range * range;
     }
 

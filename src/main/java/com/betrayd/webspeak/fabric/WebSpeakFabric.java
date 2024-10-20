@@ -87,7 +87,6 @@ public class WebSpeakFabric {
 
         survivalGroup.setAudioModifier(spectatorGroup, new AudioModifier(true, null));
         spectatorGroup.setAudioModifier(spectatorGroup, new AudioModifier(null, false));
-        
     }
 
     /**
@@ -104,7 +103,6 @@ public class WebSpeakFabric {
         }
     }
     
-
     public void onGamemodeChange(ServerPlayerEntity player, GameMode newGamemode) {
         MCWebSpeakPlayer webPlayer = getPlayer(player.getUuid());
         if (webPlayer == null)
@@ -152,4 +150,30 @@ public class WebSpeakFabric {
 
         return stopFuture;
     }
+
+    /**
+     * Update the mod's config with new panner options.
+     * @param pannerOptions New panner options to set.
+     */
+    public void setPannerOptions(PannerOptions.Partial pannerOptions) {
+        WebSpeakConfig config = WebSpeakMod.getConfig();
+        if (pannerOptions.distanceModel != null) {
+            config.setDistanceModel(pannerOptions.distanceModel);
+        }
+        if (pannerOptions.maxDistance != null) {
+            config.setMaxDistance(pannerOptions.maxDistance);
+        }
+        if (pannerOptions.refDistance != null) {
+            config.setRefDistance(pannerOptions.refDistance);
+        }
+        if (pannerOptions.rolloffFactor != null) {
+            config.setRolloffFactor(pannerOptions.rolloffFactor);
+        }
+        config.saveAsync();
+        if (webSpeakServer != null) {
+            webSpeakServer.getPannerOptions().copyFrom(pannerOptions);
+            webSpeakServer.updatePannerOptions();
+        }
+    }
+    
 }
