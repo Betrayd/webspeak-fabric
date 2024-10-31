@@ -154,7 +154,7 @@ public class WebSpeakCommand {
 
         context.getSource().sendFeedback(
                 () -> Text.literal("Removed ")
-                        .append(player.getStyledDisplayName())
+                        .append(player.getDisplayName())
                         .append(" from Web Speak"),
                 false);
         return 1;
@@ -177,18 +177,18 @@ public class WebSpeakCommand {
 
         WebSpeakPlayer wsPlayer = ws.getWebSpeakServer().getPlayer(player.getUuidAsString());
         if (wsPlayer == null) {
-            context.getSource().sendFeedback(() -> Text.empty().append(player.getStyledDisplayName())
+            context.getSource().sendFeedback(() -> Text.empty().append(player.getDisplayName())
                     .append(" is not connected.").formatted(Formatting.RED), false);
             return 0;
 
         } else if (wsPlayer.getConnection() != null) {
-            context.getSource().sendFeedback(() -> Text.empty().append(player.getStyledDisplayName())
+            context.getSource().sendFeedback(() -> Text.empty().append(player.getDisplayName())
                     .append(" is connected from " + wsPlayer.getConnection().getRemoteAddress())
                     .formatted(Formatting.GREEN), false);
             return 2;
 
         } else {
-            context.getSource().sendFeedback(() -> Text.empty().append(player.getStyledDisplayName())
+            context.getSource().sendFeedback(() -> Text.empty().append(player.getDisplayName())
                     .append(" is connected to Web Speak, but no client is connected.").formatted(Formatting.YELLOW),
                     false);
             return 1;
