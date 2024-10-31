@@ -177,9 +177,9 @@ public class WebSpeakCommand {
                     .append(" is not connected.").formatted(Formatting.RED), false);
             return 0;
 
-        } else if (wsPlayer.getWsContext() != null) {
+        } else if (wsPlayer.getConnection() != null) {
             context.getSource().sendFeedback(() -> Text.empty().append(player.getStyledDisplayName())
-                    .append(" is connected from " + wsPlayer.getWsContext().session.getRemoteAddress())
+                    .append(" is connected from " + wsPlayer.getConnection().getRemoteAddress())
                     .formatted(Formatting.GREEN), false);
             return 2;
 

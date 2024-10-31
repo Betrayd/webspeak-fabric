@@ -3,8 +3,6 @@ package com.betrayd.webspeak.fabric;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-import org.slf4j.LoggerFactory;
-
 import net.betrayd.webspeak.WebSpeakGroup;
 import net.betrayd.webspeak.WebSpeakServer;
 import net.betrayd.webspeak.util.AudioModifier;
@@ -80,7 +78,12 @@ public class WebSpeakFabric {
             }
         });
 
-        webSpeakServer.start(WebSpeakMod.getConfig().getPort());
+        try {
+            webSpeakServer.startJetty(WebSpeakMod.getConfig().getPort());
+        } catch (Exception e) {
+            WebSpeakMod.LOGGER.error("Error launching WebSpeak", e);
+            return;
+        }
 
         survivalGroup = new WebSpeakGroup("survival");
         spectatorGroup = new WebSpeakGroup("spectator");
@@ -126,7 +129,7 @@ public class WebSpeakFabric {
     }
 
     public void tick() {
-        if (webSpeakServer != null && webSpeakServer.getApp() != null) {
+        if (webSpeakServer != null && webSpeakServer.isRunning()) {
             webSpeakServer.tick();
         }
     }
@@ -139,9 +142,8 @@ public class WebSpeakFabric {
         }
 
         stopFuture = CompletableFuture.runAsync(() -> {
-            if (webSpeakServer != null && webSpeakServer.getApp() != null) {
-                LoggerFactory.getLogger(getClass()).info("Shutting down WebSpeak");
-                webSpeakServer.stop();
+            if (webSpeakServer != null && webSpeakServer.isRunning()) {
+                
             }
 
             webSpeakServer = null;
