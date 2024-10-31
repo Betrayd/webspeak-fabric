@@ -117,7 +117,11 @@ public class WebSpeakCommand {
         webPlayer.setChannel(server.getDefaultChannel());
 
         WebSpeakConfig config = WebSpeakMod.getConfig();
-        String url = webPlayer.getConnectionURL(config.getFrontendURL(), config.getBackendURL());
+
+        String relayAddress = server.getRelayAddress();
+        String serverID = server.getRelayServerID();
+
+        String url = (relayAddress != null && serverID != null) ? webPlayer.getConnectionURL(config.getFrontendURL(), relayAddress + "/relay/" + serverID) : webPlayer.getConnectionURL(config.getFrontendURL(), config.getBackendURL());
 
         context.getSource().sendFeedback(() -> {
             return Text.literal("Connected to Web Speak.").append(" Click ").append(Text.literal("here").setStyle(
