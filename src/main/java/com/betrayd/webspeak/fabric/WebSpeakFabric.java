@@ -79,7 +79,13 @@ public class WebSpeakFabric {
         });
 
         try {
-            webSpeakServer.startJetty(WebSpeakMod.getConfig().getPort());
+            WebSpeakConfig config = WebSpeakMod.getConfig();
+            if(config.isUseRelay()) {
+                webSpeakServer.startRelay(config.getRelayAddress());
+            }
+            else {
+                webSpeakServer.startJetty(config.getPort());
+            }
         } catch (Exception e) {
             WebSpeakMod.LOGGER.error("Error launching WebSpeak", e);
             return;

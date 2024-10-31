@@ -27,6 +27,28 @@ public class WebSpeakConfig {
         this.port = port;
     }
 
+    private boolean useRelay = true;
+
+    public boolean isUseRelay()
+    {
+        return useRelay;
+    }
+
+    public void setUseRelay(boolean useRelay) {
+        this.useRelay = useRelay;
+    }
+
+    private String relayAddress = "wss://webspeak.betrayd.net";
+
+    public String getRelayAddress()
+    {
+        return relayAddress;
+    }
+
+    public void setRelayAddress(String relayAddress) {
+        this.relayAddress = relayAddress;
+    }
+
     private String frontendURL = "https://betrayd.github.io/web-speak";
 
     public String getFrontendURL() {
@@ -77,7 +99,7 @@ public class WebSpeakConfig {
         this.distanceModel = distanceModel;
     }
 
-    private float maxDistance = 26;
+    private float maxDistance = 24;
 
     public float getMaxDistance() {
         return maxDistance;
