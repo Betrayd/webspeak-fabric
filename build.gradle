@@ -22,7 +22,7 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	implementation(include('com.github.Betrayd:web-speak:35eef89'))
+	implementation(include('com.github.Betrayd:web-speak:fe9df26e95'))
 	
 
 	// Include webspeak transitive dependencies
@@ -49,9 +49,9 @@ dependencies {
 	include('org.eclipse.jetty.ee10:jetty-ee10-webapp:12.0.14')
 	include('org.eclipse.jetty:jetty-ee:12.0.14')
 	include('org.eclipse.jetty:jetty-xml:12.0.14')
-	include('org.ow2.asm:asm:9.7')
-	include('org.ow2.asm:asm-commons:9.7')
-	include('org.ow2.asm:asm-tree:9.7')
+//	include('org.ow2.asm:asm:9.7')
+//	include('org.ow2.asm:asm-commons:9.7')
+//	include('org.ow2.asm:asm-tree:9.7')
 	include('org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-servlet:12.0.14')
 	include('org.eclipse.jetty.websocket:jetty-websocket-core-server:12.0.14')
 	include('org.eclipse.jetty.websocket:jetty-websocket-core-common:12.0.14')
