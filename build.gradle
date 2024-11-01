@@ -22,7 +22,7 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	implementation(include('com.github.Betrayd:web-speak:35eef89'))
+	implementation(include('com.github.Betrayd:web-speak:5288b7e71e'))
 	
 
 	// Include webspeak transitive dependencies
@@ -49,9 +49,6 @@ dependencies {
 	include('org.eclipse.jetty.ee10:jetty-ee10-webapp:12.0.14')
 	include('org.eclipse.jetty:jetty-ee:12.0.14')
 	include('org.eclipse.jetty:jetty-xml:12.0.14')
-	include('org.ow2.asm:asm:9.7')
-	include('org.ow2.asm:asm-commons:9.7')
-	include('org.ow2.asm:asm-tree:9.7')
 	include('org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-servlet:12.0.14')
 	include('org.eclipse.jetty.websocket:jetty-websocket-core-server:12.0.14')
 	include('org.eclipse.jetty.websocket:jetty-websocket-core-common:12.0.14')
@@ -61,26 +58,6 @@ dependencies {
 	include('org.eclipse.jetty:jetty-client:12.0.14')
 	include('org.eclipse.jetty:jetty-alpn-client:12.0.14')
 	include('org.eclipse.jetty.websocket:jetty-websocket-core-client:12.0.14')
-
-
-	// include("io.javalin:javalin:6.3.0")
-	// include("org.eclipse.jetty:jetty-server:11.0.23")
-	// include("org.eclipse.jetty:jetty-http:11.0.23")
-	// include("org.eclipse.jetty:jetty-io:11.0.23")
-	// include("org.eclipse.jetty:jetty-util:11.0.23")
-	// include("org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api:5.0.2")
-	// include("org.eclipse.jetty.websocket:websocket-jetty-server:11.0.23")
-	// include("org.eclipse.jetty:jetty-servlet:11.0.23")
-	// include("org.eclipse.jetty:jetty-security:11.0.23")
-	// include("org.eclipse.jetty:jetty-webapp:11.0.23")
-	// include("org.eclipse.jetty:jetty-xml:11.0.23")
-	// include("org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api:5.0.2")
-	// include("org.eclipse.jetty.websocket:websocket-jetty-api:11.0.23")
-	// include("org.eclipse.jetty.websocket:websocket-jetty-common:11.0.23")
-	// include("org.eclipse.jetty.websocket:websocket-core-common:11.0.23")
-	// include("org.eclipse.jetty.websocket:websocket-jetty-api:11.0.23")
-	// include("org.eclipse.jetty.websocket:websocket-servlet:11.0.23")
-	// include("org.eclipse.jetty.websocket:websocket-core-server:11.0.23")
 	
 }
 
