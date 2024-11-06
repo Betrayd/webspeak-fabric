@@ -4,9 +4,11 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import net.betrayd.webspeak.WebSpeakGroup;
+import net.betrayd.webspeak.WebSpeakPlayer;
 import net.betrayd.webspeak.WebSpeakServer;
 import net.betrayd.webspeak.util.AudioModifier;
 import net.betrayd.webspeak.util.PannerOptions;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -39,18 +41,16 @@ public class WebSpeakFabric {
         return survivalGroup;
     }
 
-    public void setSurvivalGroup(WebSpeakGroup survivalGroup) {
-        this.survivalGroup = survivalGroup;
-    }
-
     private WebSpeakGroup spectatorGroup;
 
     public WebSpeakGroup getSpectatorGroup() {
         return spectatorGroup;
     }
 
-    public void setSpectatorGroup(WebSpeakGroup spectatorGroup) {
-        this.spectatorGroup = spectatorGroup;
+    private WebSpeakGroup deadGroup;
+
+    public WebSpeakGroup getDeadGroup() {
+        return deadGroup;
     }
 
     public boolean isRunning() {
@@ -65,6 +65,12 @@ public class WebSpeakFabric {
         webSpeakServer = new WebSpeakServer();
         // webSpeakServer.getPannerOptions().maxDistance = config.getMaxRange();
         updatePannerOptions();
+
+        webSpeakServer.onPlayerAdded(p -> {
+            if (p instanceof MCWebSpeakPlayer webPlayer) {
+                recalcGamemode(webPlayer, webPlayer.getMcPlayer().interactionManager.getGameMode());
+            }
+        });
 
         webSpeakServer.onSessionConnected(player -> {
             if (player instanceof MCWebSpeakPlayer mcPlayer) {
@@ -93,9 +99,13 @@ public class WebSpeakFabric {
 
         survivalGroup = new WebSpeakGroup("survival");
         spectatorGroup = new WebSpeakGroup("spectator");
+        deadGroup = new WebSpeakGroup("dead");
 
         survivalGroup.setAudioModifier(spectatorGroup, new AudioModifier(true, null));
+        survivalGroup.setAudioModifier(deadGroup, new AudioModifier(true, null));
+
         spectatorGroup.setAudioModifier(spectatorGroup, new AudioModifier(null, false));
+        spectatorGroup.setAudioModifier(deadGroup, new AudioModifier(true, null));
     }
 
     /**
@@ -113,16 +123,34 @@ public class WebSpeakFabric {
     }
     
     public void onGamemodeChange(ServerPlayerEntity player, GameMode newGamemode) {
-        MCWebSpeakPlayer webPlayer = getPlayer(player.getUuid());
+        MCWebSpeakPlayer webPlayer = getPlayer(player);
         if (webPlayer == null)
             return;
         
-        if (newGamemode == GameMode.SPECTATOR) {
-            webPlayer.removeGroup(survivalGroup);
-            webPlayer.addGroup(spectatorGroup);
+        recalcGamemode(webPlayer, newGamemode);
+    }
+
+    private void recalcGamemode(WebSpeakPlayer player, GameMode gamemode) {
+        if (gamemode == GameMode.SPECTATOR) {
+            player.removeGroup(survivalGroup);
+            player.addGroup(spectatorGroup);
         } else {
-            webPlayer.removeGroup(spectatorGroup);
-            webPlayer.addGroup(survivalGroup);
+            player.removeGroup(spectatorGroup);
+            player.addGroup(survivalGroup);
+        }
+    }
+
+    public void onPlayerDied(ServerPlayerEntity player) {
+        MCWebSpeakPlayer webPlayer = getPlayer(player);
+        if (webPlayer != null) {
+            webPlayer.addGroup(deadGroup);
+        }
+    }
+
+    public void onPlayerRespawned(ServerPlayerEntity player) {
+        MCWebSpeakPlayer webPlayer = getPlayer(player);
+        if (webPlayer != null) {
+            webPlayer.removeGroup(deadGroup);
         }
     }
 
@@ -132,6 +160,10 @@ public class WebSpeakFabric {
         } else {
             return null;
         }
+    }
+
+    public MCWebSpeakPlayer getPlayer(PlayerEntity player) {
+        return getPlayer(player.getUuid());
     }
 
     public void tick() {

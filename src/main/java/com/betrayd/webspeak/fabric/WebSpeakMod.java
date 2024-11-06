@@ -14,8 +14,11 @@ import com.betrayd.webspeak.fabric.events.SetGameModeEvent;
 import net.betrayd.webspeak.WebSpeakServer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public class WebSpeakMod implements ModInitializer {
 
@@ -46,6 +49,18 @@ public class WebSpeakMod implements ModInitializer {
         SetGameModeEvent.EVENT.register((player, newGamemode, oldGamemode) -> {
             WebSpeakFabric ws = WebSpeakFabric.get(player.getServer());
             ws.onGamemodeChange(player, newGamemode);
+        });
+
+        ServerLivingEntityEvents.AFTER_DEATH.register((entity, damageSource) -> {
+            if (entity instanceof ServerPlayerEntity player) {
+                WebSpeakFabric.get(player.getServer()).onPlayerDied(player);
+            }
+        });
+
+        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
+            if (newPlayer != null) {
+                WebSpeakFabric.get(newPlayer.getServer()).onPlayerRespawned(newPlayer);
+            }
         });
     }
 
