@@ -121,7 +121,7 @@ public class WebSpeakCommand {
         String relayAddress = server.getRelayAddress();
         String serverID = server.getRelayServerID();
 
-        String url = (relayAddress != null && serverID != null) ? webPlayer.getConnectionURL(config.getFrontendURL(), relayAddress + "/relay/" + serverID) : webPlayer.getConnectionURL(config.getFrontendURL(), config.getBackendURL());
+        String url = (relayAddress != null && serverID != null) ? webPlayer.getConnectionURL(config.getTranslatedFrontendURL(), relayAddress + "/relay/" + serverID) : webPlayer.getConnectionURL(config.getTranslatedFrontendURL(), config.getBackendURL());
 
         context.getSource().sendFeedback(() -> {
             return Text.literal("Connected to Web Speak.").append(" Click ").append(Text.literal("here").setStyle(

@@ -16,7 +16,7 @@ public class WebSpeakUtils {
     
     public static String getPlayerConnectionAddress(String sessionID) {
         var config = WebSpeakMod.getConfig();
-        return config.getFrontendURL() + "?server="
+        return config.getTranslatedFrontendURL() + "?server="
                 + URIComponent.decode(config.getBackendURL())
                 + "&id=" + sessionID;
     }

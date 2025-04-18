@@ -10,6 +10,7 @@ import java.util.concurrent.CompletionException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import net.betrayd.webspeak.WebSpeakServer;
 import net.betrayd.webspeak.util.PannerOptions.DistanceModelType;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -49,10 +50,15 @@ public class WebSpeakConfig {
         this.relayAddress = relayAddress;
     }
 
-    private String frontendURL = "https://betrayd.github.io/web-speak";
+    private String frontendURL = "https://betrayd.github.io/web-speak/{version}";
 
     public String getFrontendURL() {
         return frontendURL;
+    }
+
+    public String getTranslatedFrontendURL()
+    {
+        return getFrontendURL().replace("{version}", WebSpeakServer.VERSION_STRING);
     }
 
     public void setFrontendURL(String frontendURL) {
