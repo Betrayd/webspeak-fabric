@@ -4,7 +4,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BooleanSupplier;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+//import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,6 +15,7 @@ import com.betrayd.webspeak.fabric.WebSpeakProvider;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.profiler.Profiler;
+import net.minecraft.util.profiler.Profilers;
 
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin implements WebSpeakProvider {
@@ -22,8 +23,9 @@ public class MinecraftServerMixin implements WebSpeakProvider {
     @Unique
     private final WebSpeakFabric webSpeak = new WebSpeakFabric((MinecraftServer) (Object) this);
 
-    @Shadow
-    private Profiler profiler;
+    //Deprecated
+    /*@Shadow
+    private Profiler profiler;*/
 
     @Override
     public WebSpeakFabric getWebSpeak() {
@@ -33,6 +35,7 @@ public class MinecraftServerMixin implements WebSpeakProvider {
     @Inject(method = "tick", at=@At("TAIL"))
     void betrayd$onTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
         if (webSpeak != null) {
+            Profiler profiler = Profilers.get();
             profiler.push("webspeak");
             webSpeak.tick();
             profiler.pop();
