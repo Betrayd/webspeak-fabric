@@ -54,7 +54,7 @@ public class WebSpeakFabric {
     }
 
     public boolean isRunning() {
-        return webSpeakServer != null;
+        return webSpeakServer != null && webSpeakServer.isRunning();
     }
 
     public void start() {
@@ -167,7 +167,7 @@ public class WebSpeakFabric {
     }
 
     public void tick() {
-        if (webSpeakServer != null && webSpeakServer.isRunning()) {
+        if (isRunning()) {
             webSpeakServer.tick();
         }
     }
@@ -180,10 +180,11 @@ public class WebSpeakFabric {
         }
 
         stopFuture = CompletableFuture.runAsync(() -> {
-            if (webSpeakServer != null && webSpeakServer.isRunning()) {
+            if (isRunning()) {
                 
             }
 
+            webSpeakServer.stop();
             webSpeakServer = null;
             stopFuture = null;
         }, Util.getMainWorkerExecutor());
